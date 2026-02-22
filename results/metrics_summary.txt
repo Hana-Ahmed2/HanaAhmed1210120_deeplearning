@@ -1,0 +1,15 @@
+PIMA INDIANS DIABETES NEURAL NETWORK - METRICS SUMMARY
+============================================================
+
+Test Accuracy:  0.7143 (71.43%)
+Test Loss:      0.6109
+
+Precision:      0.5165
+Recall:         0.8704
+F1-Score:       0.6483
+
+Confusion Matrix:
+  True Negatives:  56
+  False Positives: 44
+  False Negatives: 7
+  True Positives:  47
