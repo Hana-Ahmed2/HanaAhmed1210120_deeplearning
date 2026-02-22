@@ -33,9 +33,13 @@ This project implements a neural network to predict diabetes diagnosis using the
 ```
 Input Layer (8 features)
     ↓
-Dense Layer (32 neurons, ReLU activation)
-    ↓
 Dense Layer (16 neurons, ReLU activation)
+    ↓
+Dropout (30%)
+    ↓
+Dense Layer (8 neurons, ReLU activation)
+    ↓
+Dropout (20%)
     ↓
 Output Layer (1 neuron, Sigmoid activation)
 ```
@@ -46,29 +50,27 @@ Output Layer (1 neuron, Sigmoid activation)
 - **Batch Size**: 16 (smaller for better generalization)
 - **Max Epochs**: 150
 - **Early Stopping**: Patience = 10 epochs (monitors validation loss)
-- **Class Weights**: 1.5x weight on diabetes class (to reduce false negatives)
-- **Prediction Threshold**: 0.4 (lower than default 0.5 to catch more diabetes cases)
+- **Dropout**: 30% and 20% to prevent overfitting
+- **Class Weights**: 1.3x weight on No Diabetes class (to reduce false positives)
+- **Prediction Threshold**: 0.45 (balanced between FP and FN)
 
 ## Results
 
 ### Achieved Performance
 | Metric | Value |
 |--------|-------|
-| Test Accuracy | **71.43%** |
-| Recall (Diabetes) | **87.04%** |
-| False Negatives | **7** (reduced from 22) |
-| False Positives | 44 |
-| True Positives | 47 out of 54 |
+| Test Accuracy | **74.03%** |
+| Recall (Diabetes) | **74.07%** |
+| Precision (Diabetes) | 63.49% |
+| F1-Score | 68.38% |
+| False Negatives | 14 |
+| False Positives | 23 |
 
-### Key Achievement: Minimized False Negatives
-We prioritized **reducing false negatives** (missed diabetes cases) because in medical screening, missing a diagnosis is more dangerous than a false alarm.
-
-| Stage | Threshold | Class Weight | FN | FP |
-|-------|-----------|--------------|-----|-----|
-| Original | 0.5 | None | 22 | 19 |
-| After tuning | 0.4 | 1.5x | **7** | 44 |
-
-**68% reduction in missed diabetes cases!**
+### Key Achievement: Balanced FP/FN Trade-off
+We achieved a balanced model by:
+1. **Dropout Regularization**: Added 30% and 20% dropout layers to prevent overfitting
+2. **Class Weighting**: Applied 1.3x weight to No Diabetes class to reduce false positives
+3. **Threshold Tuning**: Set threshold to 0.45 for balanced error distribution
 
 ### Dataset Challenges
 - Class imbalance (~65% non-diabetic, ~35% diabetic)
@@ -124,17 +126,18 @@ pip install tensorflow numpy pandas scikit-learn matplotlib seaborn
 
 ## Key Takeaways
 
-1. **Class weights** can significantly reduce false negatives by penalizing missed cases more
-2. **Lower prediction thresholds** trade precision for recall - critical in medical screening
-3. **Early stopping** prevents overfitting by monitoring validation loss
-4. **Feature scaling** is essential when features have different ranges
-5. **Medical context** should guide metric prioritization - recall > accuracy for disease detection
+1. **Dropout regularization** helps prevent overfitting on small datasets
+2. **Class weights** can be tuned to balance false positives and false negatives
+3. **Prediction thresholds** trade precision for recall - adjust based on use case
+4. **Early stopping** prevents overfitting by monitoring validation loss
+5. **Feature scaling** is essential when features have different ranges
 
-## Techniques Used to Reduce False Negatives
+## Techniques Used for Optimization
 
-1. **Class Weighting**: Applied 1.5x weight to diabetes class during training
-2. **Threshold Tuning**: Lowered prediction threshold from 0.5 to 0.4
-3. **Result**: 68% reduction in missed diabetes cases (22 → 7)
+1. **Dropout Layers**: 30% and 20% dropout to improve generalization
+2. **Class Weighting**: 1.3x weight on No Diabetes class to reduce FP
+3. **Threshold Tuning**: Set to 0.45 for balanced FP/FN
+4. **Result**: Achieved 74% accuracy with balanced error distribution
 
 ## Author
 
